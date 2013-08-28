@@ -4,6 +4,7 @@ var formidable = require("formidable");
 var fs = require("fs");
 var crypto = require('crypto');
 var path = require('path');
+var imagemagick = require('imagemagick');
 
 var app = require('./../app.js').app;
 
@@ -47,6 +48,19 @@ function moveFile(from, to, callback) {
     });
 }
 
+function resizeFile(filePath) {
+    imagemagick.resize({
+        srcPath: filePath,
+        dstPath: filePath,
+        width: 800
+    }, function (err, stdout, stderr) {
+        if (err) {
+            console.log("Error while resizing " + filePath + ": " + err);
+        }
+    });
+
+}
+
 function upload(request, response) {
     console.log("Request handler 'upload' was called.");
 
@@ -60,9 +74,11 @@ function upload(request, response) {
         var uploadedPath = files.upload.path;
         var targetFile = getPathForNewFile(uploadedPath);
         console.log("Uploaded file: " + uploadedPath + ", moving to " + targetFile);
+
         moveFile(uploadedPath, targetFile, function() {
+                resizeFile(targetFile);
                 response.writeHead(200, { "Content-Type": "text/html" });
-                response.write("<html><body><p>Received image:</p><img src=\"/show?img=" + path.basename(targetFile) + "\" /></body></html>");
+                response.write("<html><body><a href='/'>Go Home!</a><p>Received image:</p><img src=\"/show?img=" + path.basename(targetFile) + "\" /></body></html>");
                 response.end();
         });
     });

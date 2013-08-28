@@ -1,0 +1,18 @@
+{
+	"name": "image-store",
+	"version": "0.3.0",
+	"author": "Vasily Loginov <loginov.vasily@gmail.com>",
+	"description": "An example of Node.js server, which allows you to upload images to a global collection.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/karatheodory/nodejs-server.git"
+	},
+	"dependencies": {
+		"formidable": "*",
+		"imagemagick": "*"
+	},
+	"license": "MIT",
+	"engines": {
+		"node": ">=0.10"
+	}
+}

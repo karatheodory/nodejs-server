@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var server = require("./server");
 var router = require("./router");
-var requestHandlers = require("./handlers.js");
+var requestHandlers = require("./handlers");
 var app = require("./app").app;
 
 app.initialize();

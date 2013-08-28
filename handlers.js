@@ -5,15 +5,6 @@ var app = require("./app.js").app;
 var url = require("url");
 var path = require("path");
 
-function start(request, response) {
-    console.log("Request handler 'start' was called.");
-    fs.readFile("start.html", function(err, buffer) {
-        response.writeHead(200, {"Content-Type": "text/html"});
-        response.write(buffer.toString());
-        response.end();
-    });
-}
-
 function getFileNameFromRequest(request) {
     console.log(url.parse(request.url, true));
     var imgParam = url.parse(request.url, true).query.img;
@@ -41,8 +32,9 @@ function show(request, response) {
 }
 
 var uploadHandler = require('./handlers/upload');
+var startHandler = require('./handlers/start');
 
-exports.start = start;
+exports.start = startHandler.start;
 exports.upload = uploadHandler.upload;
 exports.show = show;
 

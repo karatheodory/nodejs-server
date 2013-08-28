@@ -3,6 +3,13 @@
 
 var url = require("url");
 
+function error404(response, pathname) {
+    console.log("* No request handler found for " + pathname);
+    response.writeHead(404, {"Content-Type":"text/plain"});
+    response.write("Unfortunately, page is not found...");
+    response.end();
+}
+
 function route(handle, request, response) {
     var pathname = url.parse(request.url).pathname;
     console.log("Routing request " + pathname);
@@ -10,10 +17,7 @@ function route(handle, request, response) {
     if (typeof handle[pathname] === 'function') {
         handle[pathname](request, response);
     } else {
-        console.log("* No request handler found for " + pathname);
-        response.writeHead(404, {"Content-Type":"text/plain"});
-        response.write("Unfortunately, page is not found...");
-        response.end();
+        error404(response, pathname);
     }
 }
 

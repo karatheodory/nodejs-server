@@ -48,7 +48,7 @@ function moveFile(from, to, callback) {
     });
 }
 
-function resizeFile(filePath) {
+function resizeFile(filePath, callback) {
     imagemagick.resize({
         srcPath: filePath,
         dstPath: filePath,
@@ -56,6 +56,10 @@ function resizeFile(filePath) {
     }, function (err, stdout, stderr) {
         if (err) {
             console.log("Error while resizing " + filePath + ": " + err);
+        }
+
+        if (callback) {
+            callback();
         }
     });
 
@@ -74,12 +78,14 @@ function upload(request, response) {
         var uploadedPath = files.upload.path;
         var targetFile = getPathForNewFile(uploadedPath);
         console.log("Uploaded file: " + uploadedPath + ", moving to " + targetFile);
-
-        moveFile(uploadedPath, targetFile, function() {
-                resizeFile(targetFile);
-                response.writeHead(200, { "Content-Type": "text/html" });
-                response.write("<html><body><a href='/'>Go Home!</a><p>Received image:</p><img src=\"/show?img=" + path.basename(targetFile) + "\" /></body></html>");
-                response.end();
+        resizeFile(uploadedPath, function() {
+            moveFile(uploadedPath, targetFile, function() {
+                    resizeFile(targetFile);
+                    response.writeHead(200, { "Content-Type": "text/html" });
+                    response.write("<html><body><a href='/'>Go Home!</a><p>Received image:</p><img src=\"/show?img=" 
+                        + path.basename(targetFile) + "\" /></body></html>");
+                    response.end();
+            });
         });
     });
 }

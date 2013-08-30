@@ -6,7 +6,6 @@ var url = require("url");
 var path = require("path");
 
 function getFileNameFromRequest(request) {
-    console.log(url.parse(request.url, true));
     var imgParam = url.parse(request.url, true).query.img;
     console.log("Showing " + imgParam);
     return imgParam;
